@@ -1,0 +1,83 @@
+﻿/*Body Selector*/
+body {
+    margin: 0px 0px 0px 0px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+/*Head*/
+.header {
+    background-color: #FFCC00;
+    color: darkslateblue;
+}
+/*Sub of head*/
+#plannerheader {
+    height: 150px;
+}
+/*General*/
+.tenpad {
+    padding: 10px 10px 10px 10px;
+}
+.tenmarg {
+    margin: 10px 10px 10px 10px;
+}
+.secondh {
+    color: #cccccc;
+}
+/*This stuff is mostly planner stuff*/
+/*Buttons!*/
+.create {
+    border-style: none;
+    background-color: #FFCC00;
+    color: white;
+    width: 100px;
+    height: 30px;
+    border-radius: 10px;
+    transition: 1s;
+}
+.create:hover {
+    background-color: aqua;
+}
+.icon {
+    width: 30px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #FFCC00;
+    color: white;
+}
+/*Divs, Divs and more, DIVS!*/
+#createDiv {
+    border-style: solid;
+    color: #E6E6DC;
+    border-top-style: none;
+    border-width: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #81A594;
+}
+#myclasses {
+    border-style: solid;
+    color: #E6E6DC;
+    border-top-style: none;
+    border-width: 5px;
+    margin-left: 25px;
+    margin-right: 25px;
+    background-color: #81A594;
+    display: none;
+}
+#container {
+    font-family: Arial;
+    margin: 10px 10px 10px 10px;
+}
+.entryDiv {
+    border-style: solid;
+    border-color: indianred;
+    background-color: navajowhite;
+    float: left;
+    padding: 10px 10px 10px 10px;
+    margin: 5px 5px 5px 5px;
+}
+/*Classroom pages!*/
+.classCon {
+    float: left;
+    width: 600px;
+    color: #81A594;
+}

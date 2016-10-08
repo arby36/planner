@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Planner - Classrooms</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="header">
+        <div class="tenpad">
+            <h1 class="head"><span style="color: white;">2Goo > </span>Planner</h1>
+        </div>
+    </div>
+    <!--Create-->
+    <div class="classCon">
+        <div class="tenpad">
+            <h2 class="second">Create</h2>
+            <form action="../planner/class/class.php" method="post">
+                <input type="number" name="code" placeholder="Class Code" />
+                <button type="submit">Create</button>
+            </form>
+        </div>
+    </div>
+    <!--Edit/Add-->
+    <div class="classCon">
+        <div class="tenpad">
+            <h2 class="second">Add</h2>
+            <input type="number" placeholder="Code" id="checkCode" />
+            <button type="button" onclick="check()">Check</button>
+            <div id="noshow" style="display: none">
+                <p id="state"></p>
+                <form action="../planner/class/edit.php" method="post">
+                    <input type="text" name="code" placeholder="Class Code" />
+                    <br />
+                    <input type="text" name="title" placeholder="Title" />
+                    <br />
+                    <textarea name="entry" rows="5" cols="25" placeholder="Entry"></textarea>
+                    <br />
+                    <button type="submit">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function check() {
+        var code = document.getElementById("checkCode").value;
+        var status = document.getElementById("state").innerHTML;
+        var xhttp = new XMLHttpRequest();
+        var url = "../planner/class/" + code + ".txt";
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                status = "Proceed.";
+                document.getElementById("noshow").style.display = "initial";
+            }
+            else if (this.status == 404) {
+                alert("No class found");
+            }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+    
+</script>

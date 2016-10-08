@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Planner</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+    <div class="header" id="plannerheader">
+        <div class="tenpad">
+            <h1 class="head"><span style="color: white;">2Goo > </span>Planner</h1>
+            <button type="button" onclick="save()" class="create" style="float: left">Save Planner</button>
+            <button type="button" onclick="showClassesDiv()" class="create" style="float: left">Classes</button>
+            <p id="saved"></p>
+        </div>
+    </div>
+    <div id="createDiv">
+        <div class="tenpad">
+            <!--Nominal-->
+            <input type="text" autocomplete="off" id="title" placeholder="Title" />
+            <br />
+            <br />
+            <textarea id="entry" rows="5" cols="25" placeholder="Entry"></textarea>
+            <br />
+            <button type="button" onclick="create()" class="create">Create</button>
+            <button type="button" onclick="showCodeDiv()" class="create">More Options</button>
+            <!--Code-->
+            <div id="codeDiv" style="display: none">
+                <br />
+                <br />
+                <input type="text" autocomplete="off" id="code" placeholder="Entry Code" />
+                <br />
+                <br />
+                <button type="button" onclick="codeCreate()" class="create">Create</button>
+                <br />
+                <br />
+                <input type="text" autocomplete="off" id="classroom" placeholder="Classroom Code" />
+                <br />
+                <br />
+                <button type="button" onclick="findClass()" class="create">Add</button>
+            </div>
+        </div>
+    </div>
+    <div id="myclasses">
+        <div class="tenpad">
+            <h2 class="secondh">Classes<span onclick="hideClassesDiv()">&nbsp;&uarr;</span></h2>
+            <div id="classes">
+
+            </div>
+        </div>
+    </div>
+    <div id="container">
+
+    </div>
+</body>
+</html>
+<script>
+    //__GLOBAL-VARIBLES__ Why do style guide want that?
+    var entries = [];
+    var classes = [];
+    //Getting The Data vvv
+    //Entries
+    function getTheData(item, index) {
+        var container = document.getElementById("container");
+        var already = document.getElementById("container").innerHTML;
+        var defaultEntry = '<div class="entryDiv"><h2>' + item.title + '</h2><p>' + item.entry + '</p><button type="button" class="icon" onclick="trash(this)">X</button></div>';
+        container.innerHTML = already + defaultEntry;
+    }
+    var data_raw = localStorage.getItem("entries");
+    var data = JSON.parse(data_raw);
+    if (data != null) {
+        data.forEach(getTheData);
+        entries = data;
+    }
+    localStorage.removeItem("entries");
+    //Query String
+    if (window.location.search == "") {
+        console.log("No query data found.");
+    }
+    else {
+        var queryS_raw = window.location.search.substring(1);
+        var queryS_2 = queryS_raw.split("=");
+        var queryS = queryS_2[1].split("[:]")
+        var queryTile = queryS[0];
+        var queryEntry = queryS[1];
+        divHelp(queryTile, queryEntry);
+    }
+
+
+    //Classes
+    var classes_raw = localStorage.getItem("classes");
+    classes = classes_raw.split(",");
+    console.log("Class Data: " + classes);
+    //END STORAGE STUFF ^^^
+    /*function showCBox() {
+        document.getElementById("createDiv").style.display = "in";
+    }*/
+    //Creating Divs
+    function create() {
+        var title = document.getElementById("title").value;
+        var entry = document.getElementById("entry").value;
+        var container = document.getElementById("container");
+        var already = document.getElementById("container").innerHTML;
+        var defaultEntry = '<div class="entryDiv"><h2>' + title + '</h2><p>' + entry + '</p><button type="button" class="icon" onclick="trash(this)">X</button></div>';
+        container.innerHTML = already + defaultEntry;
+        entries.push({
+            "title": title,
+            "entry": entry
+        });
+    }
+    //Helper Function:
+    function divHelp(title, entry) {
+        var container = document.getElementById("container");
+        var already = document.getElementById("container").innerHTML;
+        var defaultEntry = '<div class="entryDiv"><h2>' + title + '</h2><p>' + entry + '</p><button type="button" class="icon" onclick="trash(this)">X</button></div>';
+        container.innerHTML = already + defaultEntry;
+        entries.push({
+            "title": title,
+            "entry": entry
+        });
+    }
+    //Class population
+    //Helper Global Function
+    function popClasses(item, index) {
+        var already = document.getElementById("classes").innerHTML;
+        var classDiv = document.getElementById("classes");
+        var classSkel = '<div><h3 class="classEl">Class Code: ' + item + '</h3><button type="button" class="icon" onclick="classRe(this)">+</button><button type="button" class="icon" onclick="classTrash(this)">X</button></div>';
+        classDiv.innerHTML = already + classSkel;
+    }
+    function showClassesDiv() {
+        document.getElementById("myclasses").style.display = "block";
+        if (classes != null | classes[0] == "") {
+            classes.forEach(popClasses);
+        }
+        else {
+            popClasses("Oh, no classes to show!");
+        }
+    }
+    function classTrash(e) {
+        var i;
+        for (i = 0; i <= classes.length; i++) {
+            if ("Class Code: " + classes[i] == e.parentNode.childNodes[0].innerHTML) {
+                classes.splice(i, 1);
+                break;
+            }
+        }
+        e.parentNode.remove();
+    }
+    function hideClassesDiv() {
+        var i;
+        var thyDiv = document.getElementById("classes");
+        while (thyDiv.firstChild) {
+            thyDiv.removeChild(thyDiv.firstChild);
+        }
+        document.getElementById("myclasses").style.display = "none";
+        
+    }
+    function classRe(e) {
+        var classcode_raw = e.parentNode.childNodes[0].innerHTML.split(" ");
+        var classcode = classcode_raw.shift();
+        document.getElementById("classroom").value = classcode;
+        findClass();
+    }
+    //Code div
+    function codeCreate() {
+        var input_raw = document.getElementById("code").value;
+        var input = input_raw.split("[:]");
+        var container = document.getElementById("container");
+        var already = document.getElementById("container").innerHTML;
+        var defaultEntry = '<div class="entryDiv"><h2>' + input[0] + '</h2><p>' + input[1] + '</p><button type="button" class="icon" onclick="trash(this)">X</button></div>';
+        container.innerHTML = already + defaultEntry;
+        entries.push({
+            "title": input[0],
+            "entry": input[1]
+        });
+    }
+    function showCodeDiv() {
+        document.getElementById("codeDiv").style.display = "initial";
+    }
+    //Trash
+    function trash(e) {
+        var i;
+        for (i = 0; i <= entries.length; i++) {
+            if (entries[i].title == e.parentNode.childNodes[0].innerHTML) {
+                entries.splice(i, 1);
+                break;
+            }
+        }
+        e.parentNode.parentNode.removeChild(e.parentNode);
+    }
+    //Saving
+    function save() {
+        if (typeof (Storage) !== "undefined") {
+            localStorage.setItem("entries", JSON.stringify(entries));
+            console.log("Saved Entries");
+            document.getElementById("saved").innerHTML = "Saved!";
+            localStorage.setItem("classes", classes.toString());
+            console.log("Saved Classes");
+        } else {
+            alert("Your browser does not support saving! Please update your browser.");
+        }
+    }
+    //Let's do some server entries
+    function findClass() {
+        function displayEntries(item, index) {
+            var pItem = item.split("[:]");
+            var container = document.getElementById("container");
+            var already = document.getElementById("container").innerHTML;
+            var defaultEntry = '<div class="entryDiv"><h2>Class Entry: ' + pItem[0] + '</h2><p>' + pItem[1] + '</p><button type="button" class="icon" onclick="trash(this)">X</button></div>';
+            container.innerHTML = already + defaultEntry;
+            entries.push({
+                "title": "Class Entry: " + pItem[0],
+                "entry": pItem[1]
+            });
+        }
+        var code = document.getElementById("classroom").value;
+        var xhttp = new XMLHttpRequest();
+        var url = "../planner/class/classroom" + code + ".txt";
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var classEntries_raw = this.responseText;
+                var classEntries = classEntries_raw.split("[!]");
+                classEntries.forEach(displayEntries);
+                classes.push(code);
+            }
+            else if (this.status == 404) {
+                alert("Class not found");
+            }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+</script>
