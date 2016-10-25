@@ -2,6 +2,8 @@
 
 The 2Goo Planner is a small planner website for students.
 
+Version 1.0
+
 This repo not be entirely up-to-date.
 
 Features
